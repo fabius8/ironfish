@@ -14,7 +14,7 @@ if [ ! $IRONFISH_NODENAME ]; then
  echo "nodename not config, exit"
  exit 1
 fi
-wget -q -O ironfish.sh https://api.nodes.guru/ironfish.sh && echo 1 | ./ironfish.sh >/dev/null 2>&1 && unalias ironfish 2>/dev/null
+wget -q -O ironfish.sh https://raw.githubusercontent.com/fabius8/ironfish/main/ironfish.sh && echo 1 | ./ironfish.sh >/dev/null 2>&1 && unalias ironfish 2>/dev/null
 
 service ironfishd stop;sleep 5;echo -e "Y\n" | ironfish chain:download;
 
@@ -54,7 +54,7 @@ for i in $(seq 1 60); do echo -ne ".";sleep 5;done;
 
 while true;
 do
-  balance=`ironfish wallet:balance | grep Balance | cut -f3 -d' '`
+  balance=`ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $3}'`
   if [ $balance == "0.00000000" ]; then
       sleep 10
       echo "............"
@@ -70,7 +70,7 @@ for i in $(seq 1 60); do echo -ne ".";sleep 5;done;
 
 while true;
 do
-  balance=`ironfish wallet:balance | grep Balance | cut -f3 -d' '`
+  balance=`ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $3}'`
   if [ $balance == "0.00000000" ]; then
       sleep 10
       echo "............"
