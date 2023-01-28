@@ -50,8 +50,34 @@ done
 
 ironfish wallet:mint --metadata=$(ironfish config:get nodeName|sed 's/\"//g') --name=$(ironfish config:get nodeName|sed 's/\"//g')  --amount=1000 --fee=0.00000001 --confirm;
 
-for i in $(seq 1 100); do echo -ne ".";sleep 5;done;
+for i in $(seq 1 60); do echo -ne ".";sleep 5;done;
+
+while true;
+do
+  balance=`ironfish wallet:balance | grep Balance | cut -f3 -d' '`
+  if [ $balance == "0.00000000" ]; then
+      sleep 10
+      echo "............"
+  else
+     echo "balance: $balance"
+     break;
+  fi
+done
+
 ironfish wallet:burn --assetId=$(ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $2}')  --amount=1 --fee=0.00000001 --confirm;
 
-for i in $(seq 1 100); do echo -ne ".";sleep 5;done;  
+for i in $(seq 1 60); do echo -ne ".";sleep 5;done;
+
+while true;
+do
+  balance=`ironfish wallet:balance | grep Balance | cut -f3 -d' '`
+  if [ $balance == "0.00000000" ]; then
+      sleep 10
+      echo "............"
+  else
+     echo "balance: $balance"
+     break;
+  fi
+done
+
 ironfish wallet:send --assetId=$(ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $2}') --fee=0.00000001 --amount=1 --to=dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca --confirm
