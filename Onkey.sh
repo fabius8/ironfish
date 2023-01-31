@@ -1,9 +1,10 @@
 #!/bin/bash
-set +x
 
 dos2unix map.csv
+set -x
 hostname=`hostname -I`
 nodename=`awk -F, -v IP=$hostname '$1==IP {print($2)}' map.csv`
+set +x
 
 echo 'export IRONFISH_WALLET='${nodename} >> $HOME/.bash_profile
 echo 'export IRONFISH_NODENAME='${nodename} >> $HOME/.bash_profile
@@ -24,10 +25,12 @@ sleep 5
 if [ ! $(which ironfish) ];then echo 1 | ./ironfish.sh >/dev/null 2>&1;fi
 
 
-service ironfishd stop;sleep 5;echo -e "Y\n" | ironfish chain:download >/dev/null;
+echo "chain download..."
+service ironfishd stop;sleep 5;echo -e "Y\n" | ironfish chain:download >/dev/null 2>&1;
 
 service ironfishd start; sleep 30; ironfish config:set enableTelemetry true;
 
+echo "chain sync..."
 set +x
 while true;
 do
@@ -41,7 +44,7 @@ done
 sleep 600
 
 echo "ironfish faucet"
-echo -e "\n" | ironfish faucet >/dev/null; sleep 5;  echo -e "\n" | ironfish faucet >/dev/null;
+echo -e "\n" | ironfish faucet; sleep 5;  echo -e "\n" | ironfish faucet;
 sleep 60;
 ironfish wallet:balances
 
@@ -105,4 +108,5 @@ echo $info
 
 while [[ $info =~ "Not enough" ]];do sleep 60;info=$(${cmd_send} 2>&1);echo $info;done
 
+sleep 5;echo "done, shutdown!"
 shutdown -h now
