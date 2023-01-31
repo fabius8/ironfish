@@ -70,6 +70,9 @@ cmd_burn="ironfish wallet:burn --assetId=$(ironfish wallet:balances | grep "$(ir
 info=$(${cmd_burn} 2>&1)
 echo $info
 
+while [[ $info =~ "error" ]];do sleep 10;info=$(${cmd_burn} 2>&1);echo $info;done
+
+
 for i in $(seq 1 60); do echo -ne ".";sleep 5;done;
 
 while true;
