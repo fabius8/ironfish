@@ -109,4 +109,4 @@ echo $info
 while [[ $info =~ "Not enough" ]];do sleep 60;info=$(${cmd_send} 2>&1);echo $info;done
 
 sleep 5;echo "done, shutdown!"
-shutdown -h now
+shutdown -t 5
