@@ -51,6 +51,7 @@ do
   if [ $balance == "0.00000000" ]; then
       sleep 10
       echo "............"
+      ironfish status | grep -E "Blockchain|Accounts"
   else
      echo "balance: $balance"
      break;
@@ -69,6 +70,7 @@ do
   if [ $balance == "0.00000000" ]; then
       sleep 10
       echo "............"
+      ironfish status | grep -E "Blockchain|Accounts"
   else
      echo "balance: $balance"
      break;
@@ -90,6 +92,7 @@ do
   if [ $balance == "0.00000000" ]; then
       sleep 10
       echo "............"
+      ironfish status | grep -E "Blockchain|Accounts"
   else
      echo "balance: $balance"
      break;
