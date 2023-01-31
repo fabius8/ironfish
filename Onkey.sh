@@ -49,7 +49,7 @@ while true;
 do
   balance=`ironfish wallet:balance | grep Balance | cut -f3 -d' '`
   if [ -z $balance ] || [ $balance == "0.00000000" ]; then
-      sleep 300
+      sleep 30
       echo -ne "."
   else
      echo "balance: $balance"
@@ -57,6 +57,7 @@ do
   fi
 done
 
+echo "ironfish mint"
 cmd_mint="ironfish wallet:mint --metadata=$(ironfish config:get nodeName|sed 's/\"//g') --name=$(ironfish config:get nodeName|sed 's/\"//g')  --amount=1000 --fee=0.00000001 --confirm"
 info=$(${cmd_mint} 2>&1)
 echo $info
@@ -67,7 +68,7 @@ while true;
 do
   balance=`ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $3}'`
   if [ -z $balance ] || [ $balance == "0.00000000" ]; then
-      sleep 10
+      sleep 30
       echo -ne "."
   else
      echo "balance: $balance"
@@ -75,11 +76,12 @@ do
   fi
 done
 
+echo "ironfish burn"
 cmd_burn="ironfish wallet:burn --assetId=$(ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $2}')  --amount=1 --fee=0.00000001 --confirm"
 info=$(${cmd_burn} 2>&1)
 echo $info
 
-while [[ $info =~ "error" ]];do sleep 10;info=$(${cmd_burn} 2>&1);echo $info;done
+while [[ $info =~ "error" ]];do sleep 60;info=$(${cmd_burn} 2>&1);echo $info;done
 
 
 for i in $(seq 1 60); do echo -ne ".";sleep 5;done;
@@ -96,8 +98,11 @@ do
   fi
 done
 
+echo "ironfish send"
 cmd_send="ironfish wallet:send --assetId=$(ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $2}') --fee=0.00000001 --amount=1 --to=dfc2679369551e64e3950e06a88e68466e813c63b100283520045925adbe59ca --confirm"
 info=$(${cmd_send} 2>&1)
 echo $info
 
-while [[ $info =~ "Not enough" ]];do sleep 10;info=$(${cmd_send} 2>&1);echo $info;done
+while [[ $info =~ "Not enough" ]];do sleep 60;info=$(${cmd_send} 2>&1);echo $info;done
+
+shutdown -r now
