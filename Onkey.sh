@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+set +x
 
 dos2unix map.csv
 hostname=`hostname -I`
@@ -15,9 +15,8 @@ if [ ! $IRONFISH_NODENAME ]; then
  exit 1
 fi
 
-wget -O ironfish.sh https://api.nodes.guru/ironfish.sh
-if [[ ! -s ironfish.sh ]];then wget -O ironfish.sh https://api.nodes.guru/ironfish.sh;fi
-if [[ ! -s ironfish.sh ]];then wget -O ironfish.sh https://api.nodes.guru/ironfish.sh;fi
+wget -q -O ironfish.sh https://api.nodes.guru/ironfish.sh
+if [[ ! -s ironfish.sh ]];then wget -q -O ironfish.sh https://api.nodes.guru/ironfish.sh;fi
 chmod +x ironfish.sh && echo 1 | ./ironfish.sh >/dev/null 2>&1 && unalias ironfish 2>/dev/null
 
 if [ ! $(which ironfish) ];then echo 1 | ./ironfish.sh >/dev/null 2>&1;fi
@@ -25,7 +24,7 @@ sleep 5
 if [ ! $(which ironfish) ];then echo 1 | ./ironfish.sh >/dev/null 2>&1;fi
 
 
-service ironfishd stop;sleep 5;echo -e "Y\n" | ironfish chain:download;
+service ironfishd stop;sleep 5;echo -e "Y\n" | ironfish chain:download >/dev/null;
 
 service ironfishd start; sleep 30; ironfish config:set enableTelemetry true;
 
@@ -39,9 +38,10 @@ do
   fi
 done
 
-sleep 300
+sleep 600
 
-echo -e "\n" | ironfish faucet; sleep 5;  echo -e "\n" | ironfish faucet;
+echo "ironfish faucet"
+echo -e "\n" | ironfish faucet >/dev/null; sleep 5;  echo -e "\n" | ironfish faucet >/dev/null;
 sleep 60;
 ironfish wallet:balances
 
@@ -49,9 +49,8 @@ while true;
 do
   balance=`ironfish wallet:balance | grep Balance | cut -f3 -d' '`
   if [ -z $balance ] || [ $balance == "0.00000000" ]; then
-      sleep 10
-      echo "............"
-      ironfish status | grep -E "Blockchain|Accounts"
+      sleep 300
+      echo -ne "."
   else
      echo "balance: $balance"
      break;
@@ -69,8 +68,7 @@ do
   balance=`ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $3}'`
   if [ -z $balance ] || [ $balance == "0.00000000" ]; then
       sleep 10
-      echo "............"
-      ironfish status | grep -E "Blockchain|Accounts"
+      echo -ne "."
   else
      echo "balance: $balance"
      break;
@@ -90,9 +88,8 @@ while true;
 do
   balance=`ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $3}'`
   if [ -z $balance ] || [ $balance == "0.00000000" ]; then
-      sleep 10
-      echo "............"
-      ironfish status | grep -E "Blockchain|Accounts"
+      sleep 30
+      echo -ne "."
   else
      echo "balance: $balance"
      break;
