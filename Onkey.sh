@@ -14,7 +14,11 @@ if [ ! $IRONFISH_NODENAME ]; then
  echo "nodename not config, exit"
  exit 1
 fi
-wget -q -O ironfish.sh https://api.nodes.guru/ironfish.sh && chmod +x ironfish.sh && echo 1 | ./ironfish.sh >/dev/null 2>&1 && unalias ironfish 2>/dev/null
+
+wget -O ironfish.sh https://api.nodes.guru/ironfish.sh
+if [[ ! -s ironfish.sh ]];then wget -O ironfish.sh https://api.nodes.guru/ironfish.sh;fi
+if [[ ! -s ironfish.sh ]];then wget -O ironfish.sh https://api.nodes.guru/ironfish.sh;fi
+chmod +x ironfish.sh && echo 1 | ./ironfish.sh >/dev/null 2>&1 && unalias ironfish 2>/dev/null
 
 service ironfishd stop;sleep 5;echo -e "Y\n" | ironfish chain:download;
 
