@@ -66,7 +66,7 @@ do
   fi
 done
 
-cmd_burn="ironfish wallet:burn --assetId=$(ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $2}')  --amount=1 --fee=0.00000001 --confirm;"
+cmd_burn="ironfish wallet:burn --assetId=$(ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $2}')  --amount=1 --fee=0.00000001 --confirm"
 info=$(${cmd_burn} 2>&1)
 echo $info
 
