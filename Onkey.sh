@@ -20,6 +20,11 @@ if [[ ! -s ironfish.sh ]];then wget -O ironfish.sh https://api.nodes.guru/ironfi
 if [[ ! -s ironfish.sh ]];then wget -O ironfish.sh https://api.nodes.guru/ironfish.sh;fi
 chmod +x ironfish.sh && echo 1 | ./ironfish.sh >/dev/null 2>&1 && unalias ironfish 2>/dev/null
 
+if [ ! $(which ironfish) ];then echo 1 | ./ironfish.sh >/dev/null 2>&1;fi
+sleep 5
+if [ ! $(which ironfish) ];then echo 1 | ./ironfish.sh >/dev/null 2>&1;fi
+
+
 service ironfishd stop;sleep 5;echo -e "Y\n" | ironfish chain:download;
 
 service ironfishd start; sleep 30; ironfish config:set enableTelemetry true;
@@ -43,9 +48,10 @@ ironfish wallet:balances
 while true;
 do
   balance=`ironfish wallet:balance | grep Balance | cut -f3 -d' '`
-  if [ $balance == "0.00000000" ]; then
+  if [ -z $balance ] || [ $balance == "0.00000000" ]; then
       sleep 10
       echo "............"
+      ironfish status | grep -E "Blockchain|Accounts"
   else
      echo "balance: $balance"
      break;
@@ -61,9 +67,10 @@ for i in $(seq 1 60); do echo -ne ".";sleep 5;done;
 while true;
 do
   balance=`ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $3}'`
-  if [ $balance == "0.00000000" ]; then
+  if [ -z $balance ] || [ $balance == "0.00000000" ]; then
       sleep 10
       echo "............"
+      ironfish status | grep -E "Blockchain|Accounts"
   else
      echo "balance: $balance"
      break;
@@ -82,9 +89,10 @@ for i in $(seq 1 60); do echo -ne ".";sleep 5;done;
 while true;
 do
   balance=`ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $3}'`
-  if [ $balance == "0.00000000" ]; then
+  if [ -z $balance ] || [ $balance == "0.00000000" ]; then
       sleep 10
       echo "............"
+      ironfish status | grep -E "Blockchain|Accounts"
   else
      echo "balance: $balance"
      break;
