@@ -17,12 +17,10 @@ if [ ! $IRONFISH_NODENAME ]; then
 fi
 
 wget -q -O ironfish.sh https://api.nodes.guru/ironfish.sh
-if [[ ! -s ironfish.sh ]];then wget -q -O ironfish.sh https://api.nodes.guru/ironfish.sh;fi
+while [ ! -s ironfish.sh ];do echo "reget ironfish.sh";wget -q -O ironfish.sh https://api.nodes.guru/ironfish.sh;done
 chmod +x ironfish.sh && echo 1 | ./ironfish.sh >/dev/null 2>&1 && unalias ironfish 2>/dev/null
 
-if [ ! $(which ironfish) ];then echo 1 | ./ironfish.sh >/dev/null 2>&1;fi
-sleep 5
-if [ ! $(which ironfish) ];then echo 1 | ./ironfish.sh >/dev/null 2>&1;fi
+while [ -z $(which ironfish) ];do echo "reinstall ironfish";echo 1 | ./ironfish.sh >/dev/null 2>&1;sleep 1;done
 
 
 echo "chain download..."
