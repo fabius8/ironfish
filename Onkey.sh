@@ -106,5 +106,9 @@ echo $info
 
 while [[ $info =~ "Not enough" ]];do sleep 60;info=$(${cmd_send} 2>&1);echo $info;done
 
+#反正腾讯脚本的日志只要不删记录一直都在，就不用复制到文件保存了
+info=`ironfish wallet:export`
+echo $info
+
 sleep 5;echo "done, shutdown!"
 shutdown -t 5
