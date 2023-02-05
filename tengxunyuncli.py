@@ -18,6 +18,7 @@ while True:
         client = cvm_client.CvmClient(cred, "ap-singapore")
 
         req = models.DescribeInstancesRequest()
+        req.Limit = 100
         resp = client.DescribeInstances(req)
         #print(resp.to_json_string())
         
