@@ -42,7 +42,7 @@ done
 sleep 600
 
 echo "ironfish faucet"
-echo -e "\n" | ironfish faucet; sleep 5;  echo -e "\n" | ironfish faucet;
+echo -e "\n" | ironfish faucet >/dev/null 2>&1; sleep 5;  echo -e "\n" | ironfish faucet >/dev/null 2>&1;
 sleep 60;
 ironfish wallet:balances
 
