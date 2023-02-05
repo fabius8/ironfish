@@ -23,7 +23,7 @@ while True:
         #print(resp.to_json_string())
         
         returnList = []
-        print("获取每个机器状态...")
+        print("总共", resp.TotalCount, "台机器，获取每个机器状态...")
         for i in resp.InstanceSet:
             print(i.InstanceId, i.InstanceState)
             if i.InstanceState == "STOPPED":
