@@ -68,9 +68,15 @@ for i in $(seq 1 60); do echo -ne ".";sleep 5;done;
 while true;
 do
   balance=`ironfish wallet:balances | grep "$(ironfish config:get nodeName|sed 's/\"//g') " | awk '{print $3}'`
+  status=`ironfish wallet:transactions | awk 'NR==3 {print $4}'`
   if [ -z $balance ] || [ $balance == "0.00000000" ]; then
       sleep 30
       echo -ne "."
+      if [ $status == "expired" ]; then
+        echo $status
+        echo "mint again"
+        info=$(${cmd_mint} 2>&1)
+      fi
   else
      echo "balance: $balance"
      break;
